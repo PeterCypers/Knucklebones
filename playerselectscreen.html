@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knucklebones</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <h1>Knucklebones</h1>
+
+
+  <div id="add_player_container">
+    <div id="add_player_input_container" class="hidden">
+      <label for="add_player_input">Add Player:</label>
+      <input type="text" name="add_player_input" id="add_player_input">
+      <button id="add_player_btn">Add</button>
+    </div>
+    
+    <button id="toggle_input_btn" class="shown">Add player</button>
+  </div>
+  
+
+
+  <div>
+    <label for="player_one_select">Select player 1</label>
+    <select name="player_one_select" id="player_one_select"></select>
+  </div>
+
+  <div>
+    <label for="player_two_select">Select player 2</label>
+    <select name="player_two_select" id="player_two_select"></select>
+  </div>
+
+  <button id="player_select_play_btn">Play</button>
+  
+  <script src="js/playerselectscreen.js"></script>
+</body>
+</html>
