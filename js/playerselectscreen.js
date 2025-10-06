@@ -17,14 +17,15 @@ function addPlayer(name) {
   }
   const savedState = getFromStorage();
   const playerList = savedState.players;
-  console.log(playerList);
   // if name is not already in the list, add to list and save to storage:
   if (playerList.indexOf(name) === -1) {
     playerList.push(name);
     savedState["players"] = playerList;
     setToStorage(savedState);
+    console.log(playerList);
     return true;
   }
+  alert("Name already exists.")
   return false;
 }
 
@@ -35,13 +36,15 @@ function navigateTo(relpath) {
 function init() {
   const playerOneSelect = document.getElementById("player_one_select");
   const playerTwoSelect = document.getElementById("player_two_select");
-  const gamePath = "../gamescreen.html";
+  const gamePath = "../gamescreen.html"; // ./gamescreen.html (after go live -> paths from project-root)
+  const homePath = "../index.html"; // ./index.html
 
   const playerInputContainer = document.getElementById("add_player_input_container");
   const playerInput = document.getElementById("add_player_input");
   const toggleInputBtn = document.getElementById("toggle_input_btn")
   const addButton = document.getElementById("add_player_btn");
   const playBtn = document.getElementById("player_select_play_btn");
+  const returnBtn = document.getElementById("back_arrow");
 
   if (!getFromStorage()) { // Init localstorage
     const STORAGE_OBJECT = {};
@@ -67,6 +70,10 @@ function init() {
     const savedState = getFromStorage();
 
     if (savedState.players.length > 0) {
+      // reset before populate else duplicates
+      playerOneSelect.innerHTML = '';
+      playerTwoSelect.innerHTML = '';
+
       for (let i = 0; i < savedState.players.length; i++) {
         const option_p1 = document.createElement("option");
         const option_p2 = document.createElement("option");
@@ -123,6 +130,10 @@ function init() {
     savedState["player_1"] = playerOneSelect.value;
     savedState["player_2"] = playerTwoSelect.value;
     setToStorage(savedState);
+  }
+
+  returnBtn.onclick = () => {
+    navigateTo(homePath);
   }
 
   playBtn.onclick = () => {
