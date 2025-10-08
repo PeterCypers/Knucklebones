@@ -1,0 +1,55 @@
+body {
+  background-color: darkcyan;
+}
+
+main {
+  display: grid;
+  justify-items: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+.shown {
+  display: unset;
+}
+
+#back_arrow {
+  font-size: xx-large;
+  color: white;
+}
+
+#back_arrow_container {
+  width: 2.5rem;
+  text-align: center;
+}
+
+#game_mode_select_container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+button {
+  border-radius: 10px;
+}
+
+#multiplayer_btn,
+#singleplayer_btn {
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+/* TODO: check back that max-width keeps working, also for add/remove player */
+#playerselectoptions_container {
+  max-width: 20rem;
+  margin: 0 auto;
+}
+
+#playerselectoptions_container > div {
+  margin-bottom: 0.5rem;
+}

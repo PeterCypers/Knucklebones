@@ -1,0 +1,3 @@
+choose a nice text style for the game title
+
+remove-player feature
