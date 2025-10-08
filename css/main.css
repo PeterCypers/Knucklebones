@@ -44,12 +44,45 @@ button {
   border-radius: 10px;
 }
 
+#toggle_deleteplayer_btn {
+  color: red;
+}
+
 /* TODO: check back that max-width keeps working, also for add/remove player */
 #playerselectoptions_container {
+  min-width: 13rem;
   max-width: 20rem;
   margin: 0 auto;
 }
 
 #playerselectoptions_container > div {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#toggle_input_btn,
+#toggle_deleteplayer_btn,
+#player_select_play_btn,
+#add_player_btn,
+#cancel_add_player_btn,
+#del_player_btn,
+#cancel_del_player_btn {
+  padding: .3rem;
+}
+
+#toggle_deleteplayer_btn {
+  min-width: 30px;
+}
+
+/* hover imply interactivity */
+#back_arrow:hover,
+#toggle_input_btn:hover,
+#add_player_btn:hover,
+#cancel_add_player_btn:hover,
+#player_select_play_btn:hover,
+#multiplayer_btn:hover,
+#singleplayer_btn:hover,
+#toggle_deleteplayer_btn:hover,
+#del_player_btn:hover,
+#cancel_del_player_btn:hover {
+  cursor: pointer;
 }

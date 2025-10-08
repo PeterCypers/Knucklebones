@@ -15,6 +15,10 @@ function addPlayer(name) {
     alert("Please fill in a name");
     return false;
   }
+  if (name.length > 20) {
+    alert("Name has too many characters.")
+    return false;
+  }
   const savedState = getFromStorage();
   const playerList = savedState.players;
   // if name is not already in the list, add to list and save to storage:
@@ -29,6 +33,18 @@ function addPlayer(name) {
   return false;
 }
 
+function deletePlayer(name) {
+  const savedState = getFromStorage();
+  const playerList = savedState.players;
+  const index = playerList.indexOf(name);
+
+  if (index !== -1) {
+    playerList.splice(index, 1);
+    savedState["players"] = playerList;
+    setToStorage(savedState);
+  }
+}
+
 function navigateTo(relpath) {
   window.location.href = relpath;
 }
@@ -36,6 +52,7 @@ function navigateTo(relpath) {
 function init() {
   const playerOneSelect = document.getElementById("player_one_select");
   const playerTwoSelect = document.getElementById("player_two_select");
+  const deletePlayerSelect = document.getElementById("del_player_select");
   const gamePath = "../gamescreen.html"; // ./gamescreen.html (after go live -> paths from project-root)
   const homePath = "../index.html"; // ./index.html
 
@@ -43,8 +60,13 @@ function init() {
   const playerInput = document.getElementById("add_player_input");
   const toggleInputBtn = document.getElementById("toggle_input_btn")
   const addButton = document.getElementById("add_player_btn");
+  const deletePlayerContainer = document.getElementById("deleteplayer_container");
+  const toggleDeletePlayerButton = document.getElementById("toggle_deleteplayer_btn");
+  const deletePlayerButton = document.getElementById("del_player_btn");
   const playBtn = document.getElementById("player_select_play_btn");
   const returnBtn = document.getElementById("back_arrow");
+  const addCancelButton = document.getElementById("cancel_add_player_btn");
+  const delCancelButton = document.getElementById("cancel_del_player_btn");
 
   if (!getFromStorage()) { // Init localstorage
     const STORAGE_OBJECT = {};
@@ -69,22 +91,25 @@ function init() {
   function populateOptionListWithPlayers() {
     const savedState = getFromStorage();
 
-    if (savedState.players.length > 0) {
-      // reset before populate else duplicates
-      playerOneSelect.innerHTML = '';
-      playerTwoSelect.innerHTML = '';
+    // reset before populate else duplicates
+    playerOneSelect.innerHTML = '';
+    playerTwoSelect.innerHTML = '';
+    deletePlayerSelect.innerHTML = '';
 
-      for (let i = 0; i < savedState.players.length; i++) {
-        const option_p1 = document.createElement("option");
-        const option_p2 = document.createElement("option");
-        option_p1.value = savedState.players[i];
-        option_p1.innerHTML = savedState.players[i];
-        option_p2.value = savedState.players[i];
-        option_p2.innerHTML = savedState.players[i];
+    for (let i = 0; i < savedState.players.length; i++) {
+      const option_p1 = document.createElement("option");
+      const option_p2 = document.createElement("option");
+      const delete_opt = document.createElement("option");
+      option_p1.value = savedState.players[i];
+      option_p1.innerHTML = savedState.players[i];
+      option_p2.value = savedState.players[i];
+      option_p2.innerHTML = savedState.players[i];
+      delete_opt.value = savedState.players[i];
+      delete_opt.innerHTML = savedState.players[i];
 
-        playerOneSelect.insertAdjacentElement("beforeend", option_p1);
-        playerTwoSelect.insertAdjacentElement("beforeend", option_p2);
-      }
+      playerOneSelect.insertAdjacentElement("beforeend", option_p1);
+      playerTwoSelect.insertAdjacentElement("beforeend", option_p2);
+      deletePlayerSelect.insertAdjacentElement("beforeend", delete_opt);
     }
   }
   populateOptionListWithPlayers(); // init
@@ -92,6 +117,7 @@ function init() {
   toggleInputBtn.onclick = () => {
       playerInputContainer.classList.replace("hidden", "shown");
       toggleInputBtn.classList.replace("shown", "hidden");
+      toggleDeletePlayerButton.classList.replace("shown", "hidden");
       playerInput.value = '';
       playerInput.focus();
   }
@@ -104,11 +130,48 @@ function init() {
   }
 
   addButton.onclick = () => {
-    if (addPlayer(playerInput.value)) {
+    if (addPlayer(playerInput.value.trim())) { // trim white space before/after input
       playerInputContainer.classList.replace("shown", "hidden");
       toggleInputBtn.classList.replace("hidden", "shown");
+      toggleDeletePlayerButton.classList.replace("hidden", "shown");
 
     populateOptionListWithPlayers();
+    }
+  }
+
+  addCancelButton.onclick = () => {
+    playerInput.value = '';
+    playerInputContainer.classList.replace("shown", "hidden");
+    toggleInputBtn.classList.replace("hidden", "shown");
+    toggleDeletePlayerButton.classList.replace("hidden", "shown");
+
+  }
+  delCancelButton.onclick = () => {
+    deletePlayerContainer.classList.replace("shown", "hidden");
+    toggleInputBtn.classList.replace("hidden", "shown");
+    toggleDeletePlayerButton.classList.replace("hidden", "shown");
+  }
+
+  toggleDeletePlayerButton.onclick = () => {
+    const savedState = getFromStorage();
+    const playerList = savedState.players;
+
+    // if there's players, move to select-to-delete
+    if (playerList.length > 0){
+      deletePlayerContainer.classList.replace("hidden", "shown");
+      toggleInputBtn.classList.replace("shown", "hidden");
+      toggleDeletePlayerButton.classList.replace("shown", "hidden");
+    }
+    // do nothing if there's no players to delete
+  }
+
+  deletePlayerButton.onclick = () => {
+    const playerToDelete = deletePlayerSelect.value;
+    if (playerToDelete !== '') {
+      if (confirm(`Delete "${playerToDelete}"?`)) {
+        deletePlayer(playerToDelete);
+        populateOptionListWithPlayers(); // update the select lists
+      }
     }
   }
 
@@ -146,12 +209,6 @@ function init() {
       navigateTo(gamePath);
     }
   }
-
-
-
-  // add player and select-opt on change have to repopulate options (no duple players)
-
-
 }
 
 window.onload = init;

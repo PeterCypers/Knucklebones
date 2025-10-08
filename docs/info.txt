@@ -1,0 +1,35 @@
+<i class="fa-solid fa-trash"></i>
+
+Why <i> was historically used
+-----------------------------
+Font Awesome originally used <i> because:
+“i” stood for “icon”, not “italic” — a clever repurposing from early web days.
+When Font Awesome launched (around 2012), <i> tags were lightweight, common for icons, and didn’t have much semantic meaning in that context.
+It helped distinguish icon fonts from text elements in HTML, back when people used icon fonts instead of inline SVGs.
+
+other interesting icons from font-awesome:
+------------------------------------------
+<div class="icon-container">
+  <i class="fas fa-dice"></i>
+  <span class="icon-label">Dice</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-hand-rock"></i>
+  <span class="icon-label">Hand</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-star"></i>
+  <span class="icon-label">Star</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-gem"></i>
+  <span class="icon-label">Gem</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-gamepad"></i>
+  <span class="icon-label">Gamepad</span>
+</div>
