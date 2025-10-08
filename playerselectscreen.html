@@ -5,10 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Knucklebones</title>
   <link rel="stylesheet" href="css/main.css">
+  <link rel="shortcut icon" href="img/favicon/dice-solid-full.svg" type="image/x-icon">
+  <!-- font-awesome svg library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+
 </head>
 <body>
   <main>
     <h1>Knucklebones</h1>
+<div class="icon-container">
+  <i class="fas fa-dice"></i>
+  <span class="icon-label">Dice</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-hand-rock"></i>
+  <span class="icon-label">Hand</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-star"></i>
+  <span class="icon-label">Star</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-gem"></i>
+  <span class="icon-label">Gem</span>
+</div>
+
+<div class="icon-container">
+  <i class="fas fa-gamepad"></i>
+  <span class="icon-label">Gamepad</span>
+</div>
 
 
 
@@ -16,15 +44,22 @@
       <div id="back_arrow_container">
         <span id="back_arrow">&#8678;</span>
       </div>
-
       <div id="add_player_container">
         <div id="add_player_input_container" class="hidden">
           <label for="add_player_input">Add Player:</label>
           <input type="text" name="add_player_input" id="add_player_input">
           <button id="add_player_btn">Add</button>
+          <button id="cancel_add_player_btn">Cancel</button>
+        </div>
+        <div id="deleteplayer_container" class="hidden">
+          <label for="del_player_select">Remove player:</label>
+          <select name="del_player_select" id="del_player_select"></select>
+          <button id="del_player_btn">Delete</button>
+          <button id="cancel_del_player_btn">Cancel</button>
         </div>
         
         <button id="toggle_input_btn" class="shown">Add player</button>
+        <button id="toggle_deleteplayer_btn" class="shown"><span class="fa-solid fa-trash"></span></button>
       </div>
       
       <div>

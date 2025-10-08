@@ -1,3 +1,15 @@
 choose a nice text style for the game title
 
-remove-player feature
+remove-player feature: ✓
+
+set input limit for new player names: ✓
+
+add animation (late implementation)
+
+find a nice favicon (maybe something with a bone)
+
+hover cursor indicating a clickable link (web)
+-> not all interactive btn are actual btn elements, so check at project completion
+
+disable non active player roll btn
+isGameOver boolean flag
