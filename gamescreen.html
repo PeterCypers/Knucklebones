@@ -8,6 +8,142 @@
   <link rel="shortcut icon" href="img/favicon/dice-solid-full.svg" type="image/x-icon">
 </head>
 <body>
+  <div id="p1_screen">
+    <!-- top banner -->
+    <div id="p1_name_title_container">
+      <div id="p1_name_gameswon_container">
+        <div id="p1_name_container">
+          Placeholder_p1_14572
+        </div>
+        <div id="p1_gameswon_container">
+          15
+        </div>
+      </div>
+
+      <h2 id="gamescreen_title">Knucklebones</h2>
+    </div>
+    <div class="back_arrow_container">
+      <span id="gamescreen_back_arrow" aria-label="Go back to previous screen">&#8678;</span>
+    </div>
+    <!-- p1_game -->
+  <div class="gameboard_roll_container">
+    <div class="gameboard_container">
+      <table>
+        <tr>
+          <td></td>
+          <td id="p1_col1_select" class="selection_arrow hidden" aria-label="column select arrow">&#8681;</td>
+          <td id="p1_col2_select" class="selection_arrow hidden" aria-label="column select arrow">&#8681;</td>
+          <td id="p1_col3_select" class="selection_arrow hidden" aria-label="column select arrow">&#8681;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="bordered bl bt"></td>
+          <td class="bordered bt"></td>
+          <td class="bordered br bt"></td>
+        </tr>
+        <tr>
+          <!-- reminder to change id-name for p2_table -->
+          <td id="total_score_p1">105</td>
+          <td class="bordered bl"></td>
+          <td class="bordered"></td>
+          <td class="bordered br"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="bordered bl bb"></td>
+          <td class="bordered bb"></td>
+          <td class="bordered br bb"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <!-- reminder for p2 -->
+          <td id="p1_col1" class="col_total">10</td>
+          <td id="p1_col2" class="col_total">2</td>
+          <td id="p1_col3" class="col_total">3</td>
+        </tr>
+      </table>
+    </div>
+    <div class="roll_container">
+      <!-- reminder for p2 -->
+      <div id="p1_diceroll_container" class="diceroll_container">
+        <img src="img/dice/red/red-dice-number-five-20200.svg" alt="">
+      </div>
+      <!-- reminder for p2 -->
+      <button id="p1_diceroll_btn" class="diceroll_btn">Roll</button>
+    </div>
+  </div>
+
+
+
+  </div>
+<hr>
+<div>
+<button id="play_replay_btn">Play</button>
+<!-- toggle on when game end, toggle off when click replay -->
+<p class="game_feedback hidden"></p>
+</div>
+<hr>
+
+
+<div id="p2_screen">
+  <!-- p2_game -->
+  <div class="gameboard_roll_container">
+    <div class="gameboard_container">
+      <table>
+        <tr>
+          <td></td>
+          <td id="p2_col1" class="col_total">10</td>
+          <td id="p2_col2" class="col_total">2</td>
+          <td id="p2_col3" class="col_total">3</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="bordered bl bt">
+            <img src="img/dice/red/red-dice-number-one-20204.svg" alt="" class="scaling-down">
+          </td>
+          <td class="bordered bt">
+            <img src="img/dice/red/red-dice-number-two-20203.svg" alt="" class="scaling-down">
+          </td>
+          <td class="bordered br bt">
+            <img src="img/dice/red/red-dice-number-three-20202.svg" alt="" class="scaling-down">
+          </td>
+        </tr>
+        <tr>
+          <td id="total_score_p2">105</td>
+          <td class="bordered bl">
+            <img src="img/dice/red/red-dice-number-four-20201.svg" alt="" class="scaling-down">
+          </td>
+          <td class="bordered">
+            <img id="scaledown-test" src="img/dice/red/red-dice-number-five-20200.svg" alt="" class="scaling-down">
+          </td>
+          <td class="bordered br">
+            <img src="img/dice/red/red-dice-number-six-20199.svg" alt="" class="scaling-down">
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="bordered bl bb"></td>
+          <td class="bordered bb"></td>
+          <td class="bordered br bb"></td>
+        </tr>
+        <tr>
+        <td></td>
+        <td id="p2_col1_select" class="selection_arrow floating" aria-label="column select arrow">&#8679;</td>
+        <td id="p2_col2_select" class="selection_arrow floating" aria-label="column select arrow">&#8679;</td>
+        <td id="p2_col3_select" class="selection_arrow floating" aria-label="column select arrow">&#8679;</td>
+        </tr>
+      </table>
+    </div>
+    <div class="roll_container">
+      <div id="p2_diceroll_container" class="diceroll_container">
+        <img src="img/dice/red/red-dice-number-five-20200.svg" alt="">
+      </div>
+      <button id="p2_diceroll_btn" class="diceroll_btn">Roll</button>
+    </div>
+  </div>
+</div>
+  
+
   
   <script src="js/gamescreen.js"></script>
 </body>

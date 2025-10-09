@@ -14,16 +14,20 @@ h1 {
 .hidden {
   display: none;
 }
-.shown {
+
+/* unset has some side-effects */
+/* .shown {
   display: unset;
-}
+} */
 
-#back_arrow {
+#back_arrow,
+#gamescreen_back_arrow,
+#gamerules_back_arrow {
   font-size: xx-large;
-  color: white;
+  color: powderblue;
 }
 
-#back_arrow_container {
+.back_arrow_container {
   width: 2.5rem;
   text-align: center;
 }
@@ -65,7 +69,9 @@ button {
 #add_player_btn,
 #cancel_add_player_btn,
 #del_player_btn,
-#cancel_del_player_btn {
+#cancel_del_player_btn,
+.diceroll_btn,
+#play_replay_btn {
   padding: .3rem;
 }
 
@@ -83,6 +89,137 @@ button {
 #singleplayer_btn:hover,
 #toggle_deleteplayer_btn:hover,
 #del_player_btn:hover,
-#cancel_del_player_btn:hover {
+#cancel_del_player_btn:hover,
+.diceroll_btn,
+#play_replay_btn {
   cursor: pointer;
+}
+
+/* gamescreen */
+/* ********** */
+
+#p1_name_title_container {
+  display: flex;
+  justify-content: space-between;
+}
+#p1_name_gameswon_container {
+  display: flex;
+  align-items: center;
+
+}
+#gamescreen_title {
+  margin: .5rem .5rem;
+}
+/* font-size: larger; */
+#p1_name_gameswon_container {
+  font-size: medium;
+  border-collapse: collapse;
+}
+#p1_name_container,
+#p1_gameswon_container {
+  padding: .3rem;
+  border: 2px solid black;
+  background-color: mediumorchid;
+}
+.gameboard_container td {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.bordered {
+  border: 2px solid black;
+}
+/* add total_score_p2 */
+#total_score_p1,
+#total_score_p2 {
+  border: 2px solid black;
+  background-color: mediumorchid;
+  text-align: center;
+}
+table {
+  border-collapse: collapse;
+}
+.gameboard_roll_container {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: center;
+  margin-left: 1.5rem;
+}
+.diceroll_container {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  border: 2px solid black;
+  width: 4rem;
+  height: 4rem;
+}
+.diceroll_btn {
+  margin-left: 1rem;
+  margin-top: .5rem;
+}
+.bt {
+  border-top: 4px solid cornflowerblue;
+}
+.bb {
+  border-bottom: 4px solid cornflowerblue;
+}
+.bl {
+  border-left: 4px solid cornflowerblue;
+}
+.br {
+  border-right: 4px solid cornflowerblue;
+}
+.col_total {
+  text-align: center;
+}
+.selection_arrow {
+  text-align: center;
+  font-size: xx-large;
+  color: powderblue;
+}
+.game_feedback {
+  display: inline-block;
+  margin: 0rem 0.5rem;
+  font-size: large;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.6rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.floating {
+  animation: float 2s ease-in-out infinite;
+}
+
+.diceroll_container img {
+  width: 80%;
+}
+
+td.bordered img{
+  width: 80%;
+  display: block;
+  justify-self: center;
+  /* align-self: center; */
+}
+
+@keyframes scaleDown {
+  from {
+    transform: scale(1); /* 100% */
+  }
+  to {
+    transform: scale(0); /* 0% */
+  }
+}
+
+/* add scaling down when a dice is deleted, classlist remove scaling down when a dice is added */
+/* Apply to your element */
+.scaling-down {
+  animation: scaleDown 2s ease forwards;
 }

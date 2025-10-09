@@ -13,3 +13,6 @@ hover cursor indicating a clickable link (web)
 
 disable non active player roll btn
 isGameOver boolean flag
+
+add "how to play" link to a game-guide
+page
