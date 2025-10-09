@@ -33,3 +33,9 @@ other interesting icons from font-awesome:
   <i class="fas fa-gamepad"></i>
   <span class="icon-label">Gamepad</span>
 </div>
+
+html-code dice:
+---------------
+<p>
+  &#9856; &#9857; &#9858; &#9859; &#9860; &#9861;
+</p>

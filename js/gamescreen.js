@@ -48,11 +48,24 @@ function navigateTo(relpath) {
 }
 
 function init() {
+  const returnBtn = document.getElementById("gamescreen_back_arrow");
+  const playerSelectPath = "../playerselectscreen.html"; // ./playerselectscreen.html
+  const testDie = document.getElementById("scaledown-test");
+  const testBtn = document.getElementById("p2_diceroll_btn");
 
 
+  //TODO: check how this should work
   if(!getFromStorage()) { // Init localstorage
     const STORAGE_OBJECT = {};
     setToStorage(STORAGE_OBJECT);
+  }
+
+  returnBtn.onclick = () => {
+    navigateTo(playerSelectPath);
+  }
+
+  testBtn.onclick = () => {
+    testDie.classList.toggle("scaling-down");
   }
 
 }
