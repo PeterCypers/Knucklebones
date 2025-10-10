@@ -71,7 +71,8 @@ button {
 #del_player_btn,
 #cancel_del_player_btn,
 .diceroll_btn,
-#play_replay_btn {
+#play_replay_btn,
+#resetgame_btn {
   padding: .3rem;
 }
 
@@ -91,32 +92,34 @@ button {
 #del_player_btn:hover,
 #cancel_del_player_btn:hover,
 .diceroll_btn,
-#play_replay_btn {
+#play_replay_btn,
+#resetgame_btn {
   cursor: pointer;
 }
 
 /* gamescreen */
 /* ********** */
 
-#p1_name_title_container {
+#p1_name_title_container,
+#p2_name_resetbtn_container {
   display: flex;
   justify-content: space-between;
 }
-#p1_name_gameswon_container {
+#p1_name_gameswon_container,
+#p2_name_gameswon_container {
   display: flex;
   align-items: center;
-
+  font-size: medium;
+  border-collapse: collapse;
 }
 #gamescreen_title {
   margin: .5rem .5rem;
 }
-/* font-size: larger; */
-#p1_name_gameswon_container {
-  font-size: medium;
-  border-collapse: collapse;
-}
+
 #p1_name_container,
-#p1_gameswon_container {
+#p1_gameswon_container,
+#p2_name_container,
+#p2_gameswon_container {
   padding: .3rem;
   border: 2px solid black;
   background-color: mediumorchid;
@@ -222,4 +225,7 @@ td.bordered img{
 /* Apply to your element */
 .scaling-down {
   animation: scaleDown 2s ease forwards;
+}
+#resetgame_btn {
+  margin-right: 5rem;
 }
