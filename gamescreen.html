@@ -31,9 +31,9 @@
       <table>
         <tr>
           <td></td>
-          <td id="p1_col1_select" class="selection_arrow hidden" aria-label="column select arrow">&#8681;</td>
-          <td id="p1_col2_select" class="selection_arrow hidden" aria-label="column select arrow">&#8681;</td>
-          <td id="p1_col3_select" class="selection_arrow hidden" aria-label="column select arrow">&#8681;</td>
+          <td id="p1_col1_select" class="selection_arrow floating hidden" aria-label="column select arrow">&#8681;</td>
+          <td id="p1_col2_select" class="selection_arrow floating hidden" aria-label="column select arrow">&#8681;</td>
+          <td id="p1_col3_select" class="selection_arrow floating hidden" aria-label="column select arrow">&#8681;</td>
         </tr>
         <tr>
           <td></td>
@@ -77,10 +77,10 @@
 
   </div>
 <hr>
-<div>
-<button id="play_replay_btn">Play</button>
-<!-- toggle on when game end, toggle off when click replay -->
-<p class="game_feedback hidden"></p>
+<div id="playbtn_game_feedback_container">
+  <button id="play_replay_btn">Play</button>
+  <!-- toggle on when game end, toggle off when click replay -->
+  <p id="game_feedback" class="game_feedback ">Turn: brown john</p>
 </div>
 <hr>
 

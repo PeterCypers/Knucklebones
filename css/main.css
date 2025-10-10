@@ -179,9 +179,9 @@ table {
   font-size: xx-large;
   color: powderblue;
 }
-.game_feedback {
-  display: inline-block;
-  margin: 0rem 0.5rem;
+#game_feedback {
+  color: aliceblue;
+  margin: 0rem 1.5rem;
   font-size: large;
 }
 
@@ -228,4 +228,13 @@ td.bordered img{
 }
 #resetgame_btn {
   margin-right: 5rem;
+}
+#playbtn_game_feedback_container{
+  display: flex;
+  align-items: center;
+}
+/* indicator that it's a specific player's turn */
+#p1_screen.active,
+#p2_screen.active {
+  border: 3px solid powderblue;
 }
