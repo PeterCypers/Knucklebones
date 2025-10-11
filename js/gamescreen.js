@@ -4,8 +4,8 @@ const p1Name = document.getElementById("p1_name_container");
 const p2Name = document.getElementById("p2_name_container");
 const p1Victories = document.getElementById("p1_gameswon_container");
 const p2Victories = document.getElementById("p2_gameswon_container");
-const p1TotalScore = document.getElementById("total_score_p1");
-const p2TotalScore = document.getElementById("total_score_p2");
+const p1TotalScore = document.getElementById("total_score_p1"); //TODO: check if it is needed here
+const p2TotalScore = document.getElementById("total_score_p2"); //TODO: check if it is needed here
 const playBtn = document.getElementById("play_replay_btn");
 const resetBtn = document.getElementById("resetgame_btn");
 const gameFeedback = document.getElementById("game_feedback");
@@ -129,26 +129,42 @@ class Board {
   }
 
   //setCol & setTotal & setDiceCount
+  //player MUST add dice if !isGameOver() -> return true if dice added, false (meaning player tries to add to full column)
   addDiceToColumn(colNr, diceValue){
     const diceImgPath = staticDiceImages[`${diceValue}`];
     const columnCells = this.colmap[`${colNr}`];
+    let diceAdded = false;
 
+    //nothing happens outside this case
     if(!this.columnsLocked && !this.isColumnFull(colNr)){
       const cellHtml = `<img src=${diceImgPath} alt="dice in column ${colNr}">`;
       console.log(`adding Dice with value: ${diceValue} to column nr: ${colNr}`);
       if (this.grid.get(columnCells[2]).html === "") { //bottom
         const bottom = this.grid.get(columnCells[2]);
         bottom.html = cellHtml;
+        bottom.score = diceValue;
       } else if (this.grid.get(columnCells[1]).html === "") { //middle
         const middle = this.grid.get(columnCells[1]);
         middle.html = cellHtml;
+        middle.score = diceValue;
       } else { //top
         const top = this.grid.get(columnCells[0]);
         top.html = cellHtml;
+        top.score = diceValue;
       }
+      diceAdded = true;
+      // IMPORTANT order: totalscore is based on col-score
+      this.setColTotal(colNr);
+      this.setTotalScore();
+      this.setDiceCount();
       this.lockColumns(); //locked after adding die, only able to add 1 die per roll (unlock before player roll)
+      setTimeout(() => {
+        // after dice is added, remove col-select arrows:
+        setColsSelectVisibility(this.playerNr, false);
+      }, 200)
       this.toHtml();
     }
+    return diceAdded;
   }
 
   unlockColumns() {
@@ -179,17 +195,71 @@ class Board {
   }
 
   setColTotal(colNr) {
+    const columnCells = this.colmap[`${colNr}`];
+    let total = 0;
+    const singles = [];
+    const doubles = [];
+    const tripples = [];
+    const cell1Value = this.grid.get(columnCells[0]).score;
+    const cell2Value = this.grid.get(columnCells[1]).score;
+    const cell3Value = this.grid.get(columnCells[2]).score;
+    // case tripple
+    if (cell1Value === cell2Value && cell1Value === cell3Value){
+      for (let i = 1; i <= 3; i++) { tripples.push(cell1Value); }
+    }
+    // case double(a)
+    else if (cell1Value !== cell2Value && cell1Value === cell3Value) {
+      doubles.push(cell1Value);
+      singles.push(cell2Value);
+      doubles.push(cell3Value);
+    }
+    // case double(b)
+    else if (cell1Value === cell2Value && cell2Value !== cell3Value) {
+      doubles.push(cell1Value);
+      doubles.push(cell2Value);
+      singles.push(cell3Value);
+    }
+    // case double(c)
+    else if (cell1Value !== cell2Value && cell2Value === cell3Value) {
+      singles.push(cell1Value);
+      doubles.push(cell2Value);
+      doubles.push(cell3Value);
+    }
+    // case singles
+    else if (cell1Value !== cell2Value && cell2Value !== cell3Value) {
+      singles.push(cell1Value);
+      singles.push(cell2Value);
+      singles.push(cell3Value);
+    }
 
+    // lambda callback to safely sum arrays (works on empty arrays)
+    const sum = arr => arr.reduce((a, b) => a + b, 0);
+
+    // calculate total
+    total += sum(tripples) * 3;
+    total += sum(doubles) * 2;
+    total += sum(singles);
+
+    // set the totalscore of the given col
+    switch (colNr) { 
+      case 1: this.col1Total.score = total;
+        break; 
+      case 2: this.col2Total.score = total;
+        break;
+      case 3: this.col3Total.score = total;
+        break; 
+      }
   }
 
+  // must be based on the column-total (because double/tripple scores in cols)
   setTotalScore() {
-
+    this.totalScore = this.col1Total.score + this.col2Total.score + this.col3Total.score;
   }
 
   setDiceCount() {
     let diceCount = 0; // the amount of dice on the board
     for (const cell of this.grid.values()) {
-      if(cell.html === "") {
+      if(cell.html !== "") {
         diceCount++;
       }
     }
@@ -234,6 +304,7 @@ class KnucklebonesMultiplayer {
     this.player2 = player2;
     this.setStarterPlayer();
     this.setClickActions();
+    this.initColSelectVisibility();
   }
 
   setClickActions() {
@@ -241,32 +312,98 @@ class KnucklebonesMultiplayer {
     this.p1RollBtn.onclick = () => {
       this.p1board.unlockColumns();
       this.p1Dice.rollDiceAnimated();
+      this.p1RollBtn.disabled = true;
     }
     this.p2RollBtn.onclick = () => {
       this.p2board.unlockColumns();
       this.p2Dice.rollDiceAnimated();
+      this.p2RollBtn.disabled = true;
     }
     // column select
     // player 1
-    this.p1SelectCol1.onclick = () => { this.p1board.addDiceToColumn(1, this.p1Dice.eyes); }
-    this.p1SelectCol2.onclick = () => { this.p1board.addDiceToColumn(2, this.p1Dice.eyes); }
-    this.p1SelectCol3.onclick = () => { this.p1board.addDiceToColumn(3, this.p1Dice.eyes); }
+    this.p1SelectCol1.onclick = () => { 
+      if(this.p1board.addDiceToColumn(1, this.p1Dice.eyes)) {
+        this.checkGameOver();
+        if(!this.isGameOver){
+          setTimeout(() => {
+            // give turn to other player
+            this.giveTurnTo(2);
+          }, 200)
+        }
+      }
+    }
+    this.p1SelectCol2.onclick = () => {
+      this.p1board.addDiceToColumn(2, this.p1Dice.eyes);
+      this.checkGameOver();
+      if(!this.isGameOver){
+        setTimeout(() => {
+          // give turn to other player
+          this.giveTurnTo(2);
+        }, 200)
+      }
+    }
+    this.p1SelectCol3.onclick = () => {
+      this.p1board.addDiceToColumn(3, this.p1Dice.eyes);
+      this.checkGameOver();
+      if(!this.isGameOver){
+        setTimeout(() => {
+          // give turn to other player
+          this.giveTurnTo(2);
+        }, 200)
+      }
+    }
     // player 2
-    this.p2SelectCol1.onclick = () => { this.p2board.addDiceToColumn(1, this.p2Dice.eyes); }
-    this.p2SelectCol2.onclick = () => { this.p2board.addDiceToColumn(2, this.p2Dice.eyes); }
-    this.p2SelectCol3.onclick = () => { this.p2board.addDiceToColumn(3, this.p2Dice.eyes); }
+    this.p2SelectCol1.onclick = () => {
+      if(this.p2board.addDiceToColumn(1, this.p2Dice.eyes)) {
+        this.checkGameOver();
+        if(!this.isGameOver){
+          setTimeout(() => {
+            // give turn to other player
+            this.giveTurnTo(1);
+          }, 200)
+        }
+      }
+    }
+    this.p2SelectCol2.onclick = () => {
+      this.p2board.addDiceToColumn(2, this.p2Dice.eyes);
+      this.checkGameOver();
+      if(!this.isGameOver){
+        setTimeout(() => {
+          // give turn to other player
+          this.giveTurnTo(1);
+        }, 200)
+      }
+    }
+    this.p2SelectCol3.onclick = () => {
+      this.p2board.addDiceToColumn(3, this.p2Dice.eyes);
+      this.checkGameOver();
+      if(!this.isGameOver){
+        setTimeout(() => {
+          // give turn to other player
+          this.giveTurnTo(1);
+        }, 200)
+      }
+    }
   }
 
   setStarterPlayer() {
     const random = Math.random() * 2; // range 0.01 - 1.99
 
     if (random > 1) { //p1
+      this.p2RollBtn.disabled = true;
       this.turnplayer = 1;
       this.giveTurnTo(1);
     } else { //p2
+      this.p1RollBtn.disabled = true;
       this.turnplayer = 2;
       this.giveTurnTo(2);
     }
+  }
+
+  // case: resetgame after roll & before dice-set-in-column else col-select remains visible for previous active player
+  initColSelectVisibility() {
+    setColsSelectVisibility(1, false);
+    setColsSelectVisibility(2, false);
   }
 
   //col totals & totalscore for both players
@@ -280,16 +417,35 @@ class KnucklebonesMultiplayer {
     if(playerNr === 1) {
       p1Screen.classList.add("active");
       p2Screen.classList.remove("active");
+      this.p1RollBtn.disabled = false;
     }
     if(playerNr === 2) {
       p2Screen.classList.add("active");
       p1Screen.classList.remove("active");
+      this.p2RollBtn.disabled = false;
     }
-
   }
 
-  getWinner() {
+  displayWinner() {
+    const scorePlayer1 = this.p1board.totalScore;
+    const scorePlayer2 = this.p2board.totalScore;
 
+    if (scorePlayer1 === scorePlayer2) {
+      gameFeedback.innerHTML = `Game Over, it ended in a DRAW !!!`;
+
+      p1Victories.innerHTML = Number(p1Victories.innerHTML) + 1;
+      p2Victories.innerHTML = Number(p2Victories.innerHTML) + 1;
+    }
+    else {
+      const winner = scorePlayer1 > scorePlayer2 ? this.player1 : this.player2;
+      gameFeedback.innerHTML = `Game Over, ${winner} is the Winner !!!`;
+
+      if(winner === this.player1) {
+        p1Victories.innerHTML = Number(p1Victories.innerHTML) + 1;
+      } else if (winner === this.player2) {
+        p2Victories.innerHTML = Number(p2Victories.innerHTML) + 1;
+      }
+    }
   }
 
   // happens after the active player sets a die in a col
@@ -310,8 +466,8 @@ class KnucklebonesMultiplayer {
     // this.checkGameOver();
   }
 
-  checkGameOver(){
-    if (this.p1dicecount === 9 || this.p2dicecount === 9) {
+  checkGameOver() {
+    if (this.p1board.diceCount === 9 || this.p2board.diceCount === 9) {
       this.endGame();
     }
   }
@@ -319,6 +475,7 @@ class KnucklebonesMultiplayer {
   endGame() {
     this.isGameOver = true;
     playBtn.innerHTML = "Replay";
+    this.displayWinner();
   }
 
   resetGame() {
@@ -351,8 +508,8 @@ class KnucklebonesMultiplayer {
 
   isInProgress() {
     // Number(document.getElementById("p1_gameswon_container").innerHTML);
-    const p1Score = Number(this.p1TotalScore.innerHTML);
-    const p2Score = Number(this.p2TotalScore.innerHTML);
+    const p1Score = this.p1board.totalScore;
+    const p2Score = this.p2board.totalScore;
     return (p1Score + p2Score) > 0;
   }
 
@@ -398,8 +555,8 @@ function init() {
     p2Name.innerHTML = player_2;
     p1Victories.innerHTML = 0;
     p2Victories.innerHTML = 0;
-    p1TotalScore.innerHTML = 0;
-    p2TotalScore.innerHTML = 0;
+    // p1TotalScore.innerHTML = 0;
+    // p2TotalScore.innerHTML = 0;
   }
   resetGameScreen();
 
@@ -414,6 +571,9 @@ function init() {
     // game.roll(), game.addcolumn(), game.checkgameover()}
 
     // playBtn.disabled = false;
+
+    // note: initially I had underestimated the complexity and wanted to put most/all game logic here
+    // game.playRound, game.endTurn, etc
   }
 
   function checkGameOver() {
@@ -426,10 +586,12 @@ function init() {
   }
 
   playBtn.onclick = () => {
-    if(game.isInProgress()){
-      if(confirm("Sure you want to end current game?")){
-        playKnucklebonesMultiplayer();
-      }
+    if(game.isGameOver) {
+      playKnucklebonesMultiplayer();
+    } else if(game.isInProgress()){
+        if(confirm("Sure you want to end current game?")){
+          playKnucklebonesMultiplayer();
+        }
     } else {
       playKnucklebonesMultiplayer();
     }
@@ -441,6 +603,7 @@ function init() {
   resetBtn.onclick = () => {
     if (confirm("Reset game?")) {
       resetGameScreen();
+      playKnucklebonesMultiplayer();
     }
   }
 
