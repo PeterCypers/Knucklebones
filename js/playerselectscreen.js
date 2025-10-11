@@ -53,8 +53,8 @@ function init() {
   const playerOneSelect = document.getElementById("player_one_select");
   const playerTwoSelect = document.getElementById("player_two_select");
   const deletePlayerSelect = document.getElementById("del_player_select");
-  const gamePath = "../gamescreen.html"; // ./gamescreen.html (after go live -> paths from project-root)
-  const homePath = "../index.html"; // ./index.html
+  const gamePath = "./gamescreen.html"; // ./gamescreen.html (after go live -> paths from project-root)
+  const homePath = "./index.html"; // ./index.html
 
   const playerInputContainer = document.getElementById("add_player_input_container");
   const playerInput = document.getElementById("add_player_input");
