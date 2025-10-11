@@ -85,9 +85,6 @@ function init() {
     playerTwoSelect.style.display = "none";
   }
 
-  // if players exist init the playerselects
-  // TODO: a bug happens when you click on add new player that double-populates everything here, 
-  // find a way to clear the options before going through the for loop again here
   function populateOptionListWithPlayers() {
     const savedState = getFromStorage();
 
@@ -115,13 +112,10 @@ function init() {
   populateOptionListWithPlayers(); // init
 
   toggleInputBtn.onclick = () => {
-      // playerInputContainer.classList.replace("hidden", "shown");
-      // toggleInputBtn.classList.replace("shown", "hidden");
-      // toggleDeletePlayerButton.classList.replace("shown", "hidden");
+      playerInputContainer.classList.replace("hidden", "shown");
+      toggleInputBtn.classList.replace("shown", "hidden");
+      toggleDeletePlayerButton.classList.replace("shown", "hidden");
 
-      playerInputContainer.classList.toggle("hidden");
-      toggleInputBtn.classList.toggle("hidden");
-      toggleDeletePlayerButton.classList.toggle("hidden");
       playerInput.value = '';
       playerInput.focus();
   }
@@ -145,23 +139,15 @@ function init() {
 
   addCancelButton.onclick = () => {
     playerInput.value = '';
-    // playerInputContainer.classList.replace("shown", "hidden");
-    // toggleInputBtn.classList.replace("hidden", "shown");
-    // toggleDeletePlayerButton.classList.replace("hidden", "shown");
-
-    playerInputContainer.classList.toggle("hidden");
-    toggleInputBtn.classList.toggle("hidden");
-    toggleDeletePlayerButton.classList.toggle("hidden");
-
+    playerInputContainer.classList.replace("shown", "hidden");
+    toggleInputBtn.classList.replace("hidden", "shown");
+    toggleDeletePlayerButton.classList.replace("hidden", "shown");
   }
-  delCancelButton.onclick = () => {
-    // deletePlayerContainer.classList.replace("shown", "hidden");
-    // toggleInputBtn.classList.replace("hidden", "shown");
-    // toggleDeletePlayerButton.classList.replace("hidden", "shown");
 
-    deletePlayerContainer.classList.toggle("hidden");
-    toggleInputBtn.classList.toggle("hidden");
-    toggleDeletePlayerButton.classList.toggle("hidden");
+  delCancelButton.onclick = () => {
+    deletePlayerContainer.classList.replace("shown", "hidden");
+    toggleInputBtn.classList.replace("hidden", "shown");
+    toggleDeletePlayerButton.classList.replace("hidden", "shown");
   }
 
   toggleDeletePlayerButton.onclick = () => {
@@ -170,12 +156,9 @@ function init() {
 
     // if there's players, move to select-to-delete
     if (playerList.length > 0){
-      // deletePlayerContainer.classList.replace("hidden", "shown");
-      // toggleInputBtn.classList.replace("shown", "hidden");
-      // toggleDeletePlayerButton.classList.replace("shown", "hidden");
-      deletePlayerContainer.classList.toggle("hidden");
-      toggleInputBtn.classList.toggle("hidden");
-      toggleDeletePlayerButton.classList.toggle("hidden");
+      deletePlayerContainer.classList.replace("hidden", "shown");
+      toggleInputBtn.classList.replace("shown", "hidden");
+      toggleDeletePlayerButton.classList.replace("shown", "hidden");
     }
     // do nothing if there's no players to delete
   }

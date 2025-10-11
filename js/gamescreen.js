@@ -191,7 +191,77 @@ class Board {
   // here we add the temp class (timed by settimeout) to show dice shrinking
   // after which it's innerHTML = '' (better than display: none)
   checkToDelete(enemyColNr, enemyDiceValue){
+    let deleted = false;
+    const columnCells = this.colmap[`${enemyColNr}`];
+    const boardColumnsToCheck = [
+      this.grid.get(columnCells[0]),
+      this.grid.get(columnCells[1]),
+      this.grid.get(columnCells[2])
+    ];
 
+    for (let i = 0; i < boardColumnsToCheck.length; i++) {
+      const element = boardColumnsToCheck[i];
+      if(element.score === enemyDiceValue) {
+        const htmlElement = document.getElementById(`${element.id}`);
+        // TODO: wip: figure out animation, the many timeouts maybe causing issues...
+        // htmlElement.classList.add("scaling-down");
+        // setTimeout(() => {
+          // htmlElement.classList.remove("scaling-down");
+          element.html = '';
+          element.score = 0;
+          deleted = true;
+        // }, 200)
+      }
+    }
+    if(deleted) {
+      // setTimeout(() => {
+        this.setColTotal(enemyColNr);
+        this.setTotalScore();
+        this.setDiceCount();
+        this.reshuffle(enemyColNr); // needs the same delay as the animation duration
+        this.toHtml(); // needs the same delay as the animation duration, wrap both with delay
+      // }, 200)
+    }
+    //  else {
+    //   this.toHtml();
+    // }
+  }
+
+  reshuffle(colNr) {
+    const columnCells = this.colmap[`${colNr}`];
+    // Be mindful, this is reversed from the usual, logically I'm now considering the lowest value = bottom of col-stack
+    // 1: bottom, 2:middle, 3: top
+    const cell1Value = this.grid.get(columnCells[2]);
+    const cell2Value = this.grid.get(columnCells[1]);
+    const cell3Value = this.grid.get(columnCells[0]);
+    // moving values from top of col to bottom: check bottom vs middle, move, then middle vs top, move
+    // edgecase: all dice got deleted -> do nothing
+    if(cell1Value.html === '' && cell2Value.html === '' && cell3Value.html === '') {
+      return;
+    }
+    // edgecase: bottom + mid empty, top has dice
+    if(cell1Value.html === '' && cell2Value.html === '' && cell3Value.html !== '') {
+      // move cell3 to cell1
+      cell1Value.html = cell3Value.html;
+      cell1Value.score = cell3Value.score;
+      cell3Value.html = '';
+      cell3Value.score = 0;
+      return;
+    }
+    // bottom: empty, mid: dice -> move mid to bottom
+    if(cell1Value.html === '' && cell2Value.html !== '') {
+      cell1Value.html = cell2Value.html;
+      cell1Value.score = cell2Value.score;
+      cell2Value.html = '';
+      cell2Value.score = 0;
+    }
+    // now, move top to mid (if top exists)
+    if(cell2Value.html === '' && cell3Value !== '') {
+      cell2Value.html = cell3Value.html;
+      cell2Value.score = cell3Value.score;
+      cell3Value.html = '';
+      cell3Value.score = 0;
+    }
   }
 
   setColTotal(colNr) {
@@ -322,7 +392,9 @@ class KnucklebonesMultiplayer {
     // column select
     // player 1
     this.p1SelectCol1.onclick = () => { 
-      if(this.p1board.addDiceToColumn(1, this.p1Dice.eyes)) {
+      // condition: true when dice added to the board
+      if(this.p1board.addDiceToColumn(1, this.p1Dice.eyes) === true) {
+        this.p2board.checkToDelete(1, this.p1Dice.eyes);
         this.checkGameOver();
         if(!this.isGameOver){
           setTimeout(() => {
@@ -333,28 +405,33 @@ class KnucklebonesMultiplayer {
       }
     }
     this.p1SelectCol2.onclick = () => {
-      this.p1board.addDiceToColumn(2, this.p1Dice.eyes);
-      this.checkGameOver();
-      if(!this.isGameOver){
-        setTimeout(() => {
-          // give turn to other player
-          this.giveTurnTo(2);
-        }, 200)
+      if(this.p1board.addDiceToColumn(2, this.p1Dice.eyes)){
+        this.p2board.checkToDelete(2, this.p1Dice.eyes);
+        this.checkGameOver();
+        if(!this.isGameOver){
+          setTimeout(() => {
+            // give turn to other player
+            this.giveTurnTo(2);
+          }, 200)
+        }
       }
     }
     this.p1SelectCol3.onclick = () => {
-      this.p1board.addDiceToColumn(3, this.p1Dice.eyes);
-      this.checkGameOver();
-      if(!this.isGameOver){
-        setTimeout(() => {
-          // give turn to other player
-          this.giveTurnTo(2);
-        }, 200)
+      if(this.p1board.addDiceToColumn(3, this.p1Dice.eyes)) {
+        this.p2board.checkToDelete(3, this.p1Dice.eyes);
+        this.checkGameOver();
+        if(!this.isGameOver){
+          setTimeout(() => {
+            // give turn to other player
+            this.giveTurnTo(2);
+          }, 200)
+        }
       }
     }
     // player 2
     this.p2SelectCol1.onclick = () => {
       if(this.p2board.addDiceToColumn(1, this.p2Dice.eyes)) {
+        this.p1board.checkToDelete(1, this.p2Dice.eyes);
         this.checkGameOver();
         if(!this.isGameOver){
           setTimeout(() => {
@@ -365,23 +442,27 @@ class KnucklebonesMultiplayer {
       }
     }
     this.p2SelectCol2.onclick = () => {
-      this.p2board.addDiceToColumn(2, this.p2Dice.eyes);
-      this.checkGameOver();
-      if(!this.isGameOver){
-        setTimeout(() => {
-          // give turn to other player
-          this.giveTurnTo(1);
-        }, 200)
+      if(this.p2board.addDiceToColumn(2, this.p2Dice.eyes)) {
+        this.p1board.checkToDelete(2, this.p2Dice.eyes);
+        this.checkGameOver();
+        if(!this.isGameOver){
+          setTimeout(() => {
+            // give turn to other player
+            this.giveTurnTo(1);
+          }, 200)
+        }
       }
     }
     this.p2SelectCol3.onclick = () => {
-      this.p2board.addDiceToColumn(3, this.p2Dice.eyes);
-      this.checkGameOver();
-      if(!this.isGameOver){
-        setTimeout(() => {
-          // give turn to other player
-          this.giveTurnTo(1);
-        }, 200)
+      if(this.p2board.addDiceToColumn(3, this.p2Dice.eyes)) {
+        this.p1board.checkToDelete(3, this.p2Dice.eyes);
+        this.checkGameOver();
+        if(!this.isGameOver){
+          setTimeout(() => {
+            // give turn to other player
+            this.giveTurnTo(1);
+          }, 200)
+        }
       }
     }
   }
