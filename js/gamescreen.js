@@ -1,11 +1,11 @@
 const returnBtn = document.getElementById("gamescreen_back_arrow");
-const playerSelectPath = "../playerselectscreen.html"; // ./playerselectscreen.html
+const playerSelectPath = "./playerselectscreen.html";
 const p1Name = document.getElementById("p1_name_container");
 const p2Name = document.getElementById("p2_name_container");
 const p1Victories = document.getElementById("p1_gameswon_container");
 const p2Victories = document.getElementById("p2_gameswon_container");
-const p1TotalScore = document.getElementById("total_score_p1"); //TODO: check if it is needed here
-const p2TotalScore = document.getElementById("total_score_p2"); //TODO: check if it is needed here
+// const p1TotalScore = document.getElementById("total_score_p1");
+// const p2TotalScore = document.getElementById("total_score_p2");
 const playBtn = document.getElementById("play_replay_btn");
 const resetBtn = document.getElementById("resetgame_btn");
 const gameFeedback = document.getElementById("game_feedback");
@@ -101,6 +101,7 @@ class Board {
   diceCount = 0; // the amount of dice on this board: 9 = endgame
   playerNr;
   columnsLocked = true;
+  isDeleting = false;
   colmap = {
     1: [1,4,7],
     2: [2,5,8],
@@ -190,6 +191,8 @@ class Board {
   // if this board's col contains dice of that value -> delete
   // here we add the temp class (timed by settimeout) to show dice shrinking
   // after which it's innerHTML = '' (better than display: none)
+  // after end of project note: I don't need to use this.isDeleting flag anymore, it was used
+  // to add a delay to KnucklebonesMultiplayer based on Board-loading-state
   checkToDelete(enemyColNr, enemyDiceValue){
     let deleted = false;
     const columnCells = this.colmap[`${enemyColNr}`];
@@ -203,24 +206,28 @@ class Board {
       const element = boardColumnsToCheck[i];
       if(element.score === enemyDiceValue) {
         const htmlElement = document.getElementById(`${element.id}`);
-        // TODO: wip: figure out animation, the many timeouts maybe causing issues...
-        // htmlElement.classList.add("scaling-down");
+        // figure out animation, the many timeouts maybe causing issues... (struggles)
+        // htmlElement.classList.remove("scaling-down");
+        htmlElement.classList.add("scaling-down");
         // setTimeout(() => {
           // htmlElement.classList.remove("scaling-down");
           element.html = '';
           element.score = 0;
           deleted = true;
+          this.isDeleting = true;
         // }, 200)
       }
     }
     if(deleted) {
-      // setTimeout(() => {
+      // the perfect amount of time-out to accomodate the 2s animation, but not see artifact of animation end-dice show up
+      setTimeout(() => {
         this.setColTotal(enemyColNr);
         this.setTotalScore();
         this.setDiceCount();
         this.reshuffle(enemyColNr); // needs the same delay as the animation duration
         this.toHtml(); // needs the same delay as the animation duration, wrap both with delay
-      // }, 200)
+        this.isDeleting = false;
+      }, 1900)
     }
     //  else {
     //   this.toHtml();
@@ -340,6 +347,7 @@ class Board {
   toHtml() {
     for (const cell of this.grid.values()) {
       document.getElementById(`${cell.id}`).innerHTML = `${cell.html}`;
+      document.getElementById(`${cell.id}`).classList.remove("scaling-down"); //a long saught-after solution
     }
 
     document.getElementById(`${this.col1Total.html}`).innerHTML = `${this.col1Total.score}`;
@@ -395,12 +403,13 @@ class KnucklebonesMultiplayer {
       // condition: true when dice added to the board
       if(this.p1board.addDiceToColumn(1, this.p1Dice.eyes) === true) {
         this.p2board.checkToDelete(1, this.p1Dice.eyes);
+        let timer = this.p2board.isDeleting ? 2000 : 200;
         this.checkGameOver();
         if(!this.isGameOver){
           setTimeout(() => {
             // give turn to other player
             this.giveTurnTo(2);
-          }, 200)
+          }, timer)
         }
       }
     }
@@ -432,12 +441,13 @@ class KnucklebonesMultiplayer {
     this.p2SelectCol1.onclick = () => {
       if(this.p2board.addDiceToColumn(1, this.p2Dice.eyes)) {
         this.p1board.checkToDelete(1, this.p2Dice.eyes);
+        let timer = this.p1board.isDeleting ? 2000 : 200;
         this.checkGameOver();
         if(!this.isGameOver){
           setTimeout(() => {
             // give turn to other player
             this.giveTurnTo(1);
-          }, 200)
+          }, timer)
         }
       }
     }
@@ -529,6 +539,18 @@ class KnucklebonesMultiplayer {
     }
   }
 
+  checkGameOver() {
+    if (this.p1board.diceCount === 9 || this.p2board.diceCount === 9) {
+      this.endGame();
+    }
+  }
+
+  endGame() {
+    this.isGameOver = true;
+    playBtn.innerHTML = "Replay";
+    this.displayWinner();
+  }
+// [various unused functions] **************************************************  //
   // happens after the active player sets a die in a col
   // playerNr(1||2) is the opposing player of the active player
   // colNr is the same as the active players chosen col
@@ -542,21 +564,7 @@ class KnucklebonesMultiplayer {
     if(this.turnplayer === 1) {
       p1_roll();
     }
-
-
     // this.checkGameOver();
-  }
-
-  checkGameOver() {
-    if (this.p1board.diceCount === 9 || this.p2board.diceCount === 9) {
-      this.endGame();
-    }
-  }
-
-  endGame() {
-    this.isGameOver = true;
-    playBtn.innerHTML = "Replay";
-    this.displayWinner();
   }
 
   resetGame() {
@@ -586,6 +594,7 @@ class KnucklebonesMultiplayer {
     this.gameFeedback.innerHTML = `Turn: ${player1}`;
     this.checkGameOver();
   }
+  // [END various unused functions] ************************************************** //
 
   isInProgress() {
     // Number(document.getElementById("p1_gameswon_container").innerHTML);

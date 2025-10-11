@@ -224,7 +224,8 @@ td.bordered img{
 /* add scaling down when a dice is deleted, classlist remove scaling down when a dice is added */
 /* Apply to your element */
 .scaling-down {
-  animation: scaleDown 2s ease forwards;
+  animation: scaleDown 2s;
+  /* animation: scaleDown 2s ease forwards; */
 }
 #resetgame_btn {
   margin-right: 5rem;
