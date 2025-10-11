@@ -403,13 +403,13 @@ class KnucklebonesMultiplayer {
       // condition: true when dice added to the board
       if(this.p1board.addDiceToColumn(1, this.p1Dice.eyes) === true) {
         this.p2board.checkToDelete(1, this.p1Dice.eyes);
-        let timer = this.p2board.isDeleting ? 2000 : 200;
+        // let timer = this.p2board.isDeleting ? 2000 : 200;
         this.checkGameOver();
         if(!this.isGameOver){
           setTimeout(() => {
             // give turn to other player
             this.giveTurnTo(2);
-          }, timer)
+          }, 200)
         }
       }
     }
@@ -441,13 +441,13 @@ class KnucklebonesMultiplayer {
     this.p2SelectCol1.onclick = () => {
       if(this.p2board.addDiceToColumn(1, this.p2Dice.eyes)) {
         this.p1board.checkToDelete(1, this.p2Dice.eyes);
-        let timer = this.p1board.isDeleting ? 2000 : 200;
+        // let timer = this.p1board.isDeleting ? 2000 : 200;
         this.checkGameOver();
         if(!this.isGameOver){
           setTimeout(() => {
             // give turn to other player
             this.giveTurnTo(1);
-          }, timer)
+          }, 200)
         }
       }
     }
