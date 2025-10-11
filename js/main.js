@@ -16,7 +16,7 @@ function navigateTo(relpath) {
 
 function init() {
   const multiplayerBtn = document.getElementById("multiplayer_btn");
-  const playerselectpath = "../playerselectscreen.html"; // ./playerselectscreen.html
+  const playerselectpath = "./playerselectscreen.html";
   // singleplayer equivalent
 
   if(!getFromStorage()) { // Init localstorage
