@@ -220,10 +220,17 @@ class Board {
     }
     if(deleted) {
       // the perfect amount of time-out to accomodate the 2s animation, but not see artifact of animation end-dice show up
-      setTimeout(() => {
         this.setColTotal(enemyColNr);
         this.setTotalScore();
         this.setDiceCount();
+      setTimeout(() => {
+        // moved these functions outside the time-out for the case: player ends the game with a dice drop that deletes enough
+        // enemy dice to have a higher total score and win [CASE: TURNING THE TABLES] -> inside the timeout a winner is declared
+        // after which the view is updated to display that the losing player actually had more points after oponent dice-deletion
+        // TODO: create a testscenario to check if this works?...for now, I assume this works, but it's a rare case, and difficult to hit in prod.
+        // this.setColTotal(enemyColNr);
+        // this.setTotalScore();
+        // this.setDiceCount();
         this.reshuffle(enemyColNr); // needs the same delay as the animation duration
         this.toHtml(); // needs the same delay as the animation duration, wrap both with delay
         this.isDeleting = false;
