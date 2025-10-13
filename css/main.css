@@ -81,6 +81,7 @@ button {
 }
 
 /* hover imply interactivity */
+/* note: ":hover" is redundant for cursor */
 #back_arrow:hover,
 #toggle_input_btn:hover,
 #add_player_btn:hover,
@@ -93,7 +94,15 @@ button {
 #cancel_del_player_btn:hover,
 .diceroll_btn,
 #play_replay_btn,
-#resetgame_btn {
+#resetgame_btn,
+#gamerules_back_arrow,
+#gamescreen_back_arrow,
+#p1_col1_select,
+#p1_col2_select,
+#p1_col3_select,
+#p2_col1_select,
+#p2_col2_select,
+#p2_col3_select {
   cursor: pointer;
 }
 
@@ -238,4 +247,33 @@ td.bordered img{
 #p1_screen.active,
 #p2_screen.active {
   border: 3px solid powderblue;
+}
+
+/* more ergonomic button design for p1/p2 roll */
+#p1_diceroll_btn,
+#p2_diceroll_btn {
+  font-size: medium;
+  padding: .8rem 1.2rem;
+  margin-left: 0rem;
+}
+
+@media only screen and (min-width: 31rem) {
+  main {
+    max-width: 31rem;
+  }
+  #playerselectoptions_container {
+    min-width: 25rem;
+    max-width: 31rem;
+  }
+
+  #game_screen_custom {
+    max-width: 500px;
+    border: 4mm ridge rgba(27, 121, 192, 0.6);
+    padding: 10px;
+    margin: 20px;
+  }
+  #p1_screen,
+  #p2_screen {
+    padding: 5px;
+  }
 }
