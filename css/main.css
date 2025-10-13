@@ -96,13 +96,7 @@ button {
 #play_replay_btn,
 #resetgame_btn,
 #gamerules_back_arrow,
-#gamescreen_back_arrow,
-#p1_col1_select,
-#p1_col2_select,
-#p1_col3_select,
-#p2_col1_select,
-#p2_col2_select,
-#p2_col3_select {
+#gamescreen_back_arrow {
   cursor: pointer;
 }
 
@@ -275,5 +269,19 @@ td.bordered img{
   #p1_screen,
   #p2_screen {
     padding: 5px;
+  }
+}
+
+/* only for desktop: cursor pointer on the arrows. 
+ an ugly blue outline on the container shows up for mobile if it has cursor pointer. 
+ without: no box-outline shows up */
+@media only screen and (min-width: 992px) {
+  #p1_col1_select,
+  #p1_col2_select,
+  #p1_col3_select,
+  #p2_col1_select,
+  #p2_col2_select,
+  #p2_col3_select {
+    cursor: pointer;
   }
 }
